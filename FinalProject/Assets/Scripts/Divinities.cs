@@ -14,6 +14,7 @@ public class Divinities : MonoBehaviour
 
     [SerializeField] private string medeaIntroSceneName = "LvlMedeaIntro";
 
+
     [Header("UI References")]
 
     [SerializeField] private GameObject nikeButton;
@@ -34,7 +35,6 @@ public class Divinities : MonoBehaviour
 
     public void OpenLvlGaia()
     {
-        //SceneManager.LoadScene(gaiaIntroSceneName);
         Debug.Log("Attempting to load scene: " + gaiaIntroSceneName);
         SceneManager.LoadScene(gaiaIntroSceneName); 
     }

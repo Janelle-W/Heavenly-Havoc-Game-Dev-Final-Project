@@ -467,6 +467,7 @@ MonoBehaviour:
   - {fileID: 987595473}
   levelScenes:
   - LevelNike
+  - LevelGaia
   pauseDuration: 2
 --- !u!4 &1757599068
 Transform:

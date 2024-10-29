@@ -55,6 +55,17 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    public void PlaySceneMusic(AudioClip sceneMusic)
+{
+    if (musicSource != null)
+    {
+        musicSource.Stop(); 
+        musicSource.clip = sceneMusic; 
+        musicSource.Play(); 
+    }
+}
+
+
     public void PlayPointCollectSound()
     {
         if (sfxSource != null && pointCollectSound != null)
