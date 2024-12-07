@@ -12,9 +12,10 @@ GameObject:
   - component: {fileID: -3964628575368103913}
   - component: {fileID: 2594494031320827564}
   - component: {fileID: 1389397448744589325}
+  - component: {fileID: 5860776472713686131}
   m_Layer: 0
   m_Name: Hurdles
-  m_TagString: Untagged
+  m_TagString: Hurdle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -99,11 +100,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 10
-  direction: {x: -1, y: 0, z: 0}
+  direction: {x: -1, y: 0}
   destroyBelowX: -10
   destroyDelay: 0.1
-  enableLogging: 1
-  logInterval: 60
 --- !u!61 &1389397448744589325
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -133,7 +132,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -149,3 +148,30 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.1, y: 0.15}
   m_EdgeRadius: 0
+--- !u!50 &5860776472713686131
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3848357610678430090}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 4

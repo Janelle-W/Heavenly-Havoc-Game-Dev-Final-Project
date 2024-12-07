@@ -7,35 +7,19 @@ public class Options : MonoBehaviour
     [SerializeField] private string mainMenuSceneName = "MainMenu";
     [SerializeField] private string divineSceneName = "DivinitiesScene";
 
-    [Header("UI References")]
-
-    [SerializeField] private GameObject mainMenuButton;
-
-    [SerializeField] private GameObject divineButton;
-
+    private void Start()
+    {
+        Debug.Log("Options scene loaded.");
+    }
 
     public void OpenMainMenu()
-    {
-        SceneManager.LoadScene(mainMenuSceneName); 
-    }
+{
+    SceneManager.LoadScene("MainMenu"); 
+}
+
 
     public void OpenDivinitiesScene()
     {
-        SceneManager.LoadScene(divineSceneName); 
-    }
-
-
-    private void Start()
-    {
-
-        if (mainMenuButton != null)
-        {
-            Debug.Log("MainMenu button is assigned"); 
-        }
-
-        if (divineButton != null)
-        {
-            Debug.Log("Divine button is assigned"); 
-        }
+        SceneManager.LoadScene(divineSceneName);
     }
 }

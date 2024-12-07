@@ -448,9 +448,6 @@ MonoBehaviour:
   gameSceneName: GameScene
   optionsSceneName: OptionsScene
   nikeIntroSceneName: LvlNikeIntro
-  startButton: {fileID: 1403051157}
-  quitButton: {fileID: 1365683801}
-  optionsButton: {fileID: 1402930447}
 --- !u!1 &949401603
 GameObject:
   m_ObjectHideFlags: 0
@@ -482,9 +479,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   musicSource: {fileID: 0}
   sfxSource: {fileID: 0}
-  backgroundMusic: {fileID: 8300000, guid: f287f8c788a2546c1a09168401682563, type: 3}
-  pointCollectSound: {fileID: 0}
-  audioMixer: {fileID: 0}
+  audioMixer: {fileID: 24100000, guid: ce2babe54090d4b5d8596cb0d1a619da, type: 2}
+  mainMenuMusic: {fileID: 8300000, guid: f287f8c788a2546c1a09168401682563, type: 3}
+  optionsMenuMusic: {fileID: 8300000, guid: f287f8c788a2546c1a09168401682563, type: 3}
+  nikeLevelMusic: {fileID: 8300000, guid: ca907be010cd74288a9f9da3bcae8f37, type: 3}
+  winSFX: {fileID: 0}
+  loseSFX: {fileID: 0}
 --- !u!4 &949401605
 Transform:
   m_ObjectHideFlags: 0

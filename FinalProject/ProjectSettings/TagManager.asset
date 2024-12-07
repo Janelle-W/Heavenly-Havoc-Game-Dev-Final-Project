@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Hurdle
   layers:
   - Default
   - TransparentFX
@@ -40,10 +41,13 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
-    locked: 1
+    locked: 0
   - name: Character
     uniqueID: 1122998313
     locked: 0
   - name: Background
     uniqueID: 3300217447
+    locked: 0
+  - name: gamechar
+    uniqueID: 2138706387
     locked: 0

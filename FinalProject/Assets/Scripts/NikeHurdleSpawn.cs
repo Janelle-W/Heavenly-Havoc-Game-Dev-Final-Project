@@ -1,99 +1,5 @@
 /*using UnityEngine;
-using System.Collections.Generic;
-
-public class HorizontalProjectileSpawner : MonoBehaviour
-{
-    [Header("Projectile Prefabs")]
-    [SerializeField] private GameObject pointProjectilePrefab;
-    [SerializeField] private GameObject obstacleProjectilePrefab;
-
-    [Header("Spawn Settings")]
-    [SerializeField] private float spawnInterval = 0.5f;
-    [SerializeField] private float spawnYPosition = 0f; // Set this to the desired Y position
-    [SerializeField] private float spawnXPosition = 8f; // Fixed horizontal spawn position
-
-    [Header("Projectile Settings")]
-    [SerializeField] private float projectileSpeed = 10f;
-
-    [Header("Spawn Limits")]
-    [SerializeField] private int maxProjectilesPerSpawn = 3;
-    [SerializeField] private int maxActiveProjectiles = 9;
-
-    [Header("Debug")]
-    [SerializeField] private bool enableLogging = true;
-
-    private float nextSpawnTime = 0f;
-    private List<GameObject> activeProjectiles = new List<GameObject>();
-
-    private void Update()
-    {
-        if (Time.time > nextSpawnTime && activeProjectiles.Count < maxActiveProjectiles)
-        {
-            nextSpawnTime = Time.time + spawnInterval;
-            SpawnProjectiles();
-        }
-
-        CleanUpDestroyedProjectiles();
-    }
-
-    private void SpawnProjectiles()
-    {
-        int projectilesToSpawn = Random.Range(1, maxProjectilesPerSpawn + 1);
-        
-        for (int i = 0; i < projectilesToSpawn && activeProjectiles.Count < maxActiveProjectiles; i++)
-        {
-            SpawnSingleProjectile();
-        }
-    }
-
-    private void SpawnSingleProjectile()
-    {
-        Vector3 spawnPosition = new Vector3(spawnXPosition, spawnYPosition, 0); // Fixed spawn position
-
-        GameObject projectile = InstantiateProjectile(spawnPosition);
-        SetupProjectileMovement(projectile);
-        activeProjectiles.Add(projectile);
-
-        if (enableLogging)
-        {
-            LogProjectileSpawn(projectile, spawnPosition);
-        }
-    }
-
-    private GameObject InstantiateProjectile(Vector3 spawnPosition)
-    {
-        return Random.value < 0.5f
-            ? Instantiate(pointProjectilePrefab, spawnPosition, Quaternion.identity)
-            : Instantiate(obstacleProjectilePrefab, spawnPosition, Quaternion.identity);
-    }
-
-    private void SetupProjectileMovement(GameObject projectile)
-    {
-        HorizontalProjectileMovement movement = projectile.GetComponent<HorizontalProjectileMovement>();
-        if (movement == null)
-        {
-            movement = projectile.AddComponent<HorizontalProjectileMovement>();
-        }
-        movement.speed = projectileSpeed; // Set the speed for the projectile
-    }
-
-    private void LogProjectileSpawn(GameObject projectile, Vector3 spawnPosition)
-    {
-        string projectileType = projectile.CompareTag("PointProjectile") ? "point" : "obstacle";
-        Debug.Log($"Spawned {projectileType} projectile at {spawnPosition}");
-        Debug.Log($"Spawned projectile tag: {projectile.tag}");
-    }
-
-    private void CleanUpDestroyedProjectiles()
-    {
-        activeProjectiles.RemoveAll(p => p == null);
-    }
-}
-
-*/
-using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
 
 public class HurdleSpawner : MonoBehaviour
 {
@@ -102,55 +8,224 @@ public class HurdleSpawner : MonoBehaviour
 
     [Header("Spawn Settings")]
     [SerializeField] private float initialSpawnInterval = 2f; 
-    [SerializeField] private float minimumSpawnInterval = 0.5f; 
+    [SerializeField] private float minimumSpawnInterval = 1f;  
     [SerializeField] private float spawnYPosition = 0f; 
 
     [Header("Difficulty Settings")]
-    [SerializeField] private float difficultyIncreaseRate = 1f; 
-    [SerializeField] private float spawnIntervalDecreaseAmount = 0.1f; 
+    [SerializeField] private float difficultyIncreaseRate = 2f; 
+    [SerializeField] private float spawnIntervalDecreaseAmount = 0.05f; 
+
+    [Header("Hurdle Limit")]
+    [SerializeField] private int maxHurdles = 25; 
+
     private float nextSpawnTime;
     private float currentSpawnInterval;
     private bool spawningHurdles = false;
+    private int hurdlesSpawned = 0;
+    private int hurdlesDestroyed = 0;
+
+    private Coroutine difficultyCoroutine;
+    private LevelNike levelNike;
 
     private void Start()
     {
-        currentSpawnInterval = initialSpawnInterval; 
+        currentSpawnInterval = initialSpawnInterval;
+        levelNike = FindObjectOfType<LevelNike>();
+        if (levelNike == null)
+        {
+            Debug.LogWarning("No LevelNike found in the scene. 'Hurdles Left' UI will not update.");
+        }
     }
 
     private void Update()
     {
-        if (spawningHurdles && Time.time > nextSpawnTime)
+        if (spawningHurdles && Time.time >= nextSpawnTime)
         {
-            SpawnHurdle();
-            nextSpawnTime = Time.time + currentSpawnInterval;
+            if (hurdlesSpawned < maxHurdles)
+            {
+                SpawnHurdle();
+                nextSpawnTime = Time.time + currentSpawnInterval;
+            }
+            else
+            {
+                StopSpawningHurdles();
+            }
         }
     }
 
     public void StartSpawningHurdles()
     {
-        spawningHurdles = true;
-        StartCoroutine(IncreaseDifficulty());
+        if (!spawningHurdles)
+        {
+            spawningHurdles = true;
+            difficultyCoroutine = StartCoroutine(IncreaseDifficulty());
+            UpdateHurdlesLeftUI();
+            nextSpawnTime = Time.time + currentSpawnInterval;
+        }
     }
 
     private void SpawnHurdle()
     {
-        Vector3 spawnPosition = new Vector3(10f, spawnYPosition, 0); 
-        Instantiate(hurdlePrefab, spawnPosition, Quaternion.identity);
+        Instantiate(hurdlePrefab, new Vector3(10f, spawnYPosition, 0), Quaternion.identity);
+        hurdlesSpawned++;
+        UpdateHurdlesLeftUI();
+    }
+
+    public void HurdleDestroyed()
+    {
+        hurdlesDestroyed++;
+        UpdateHurdlesLeftUI();
+    }
+
+    private void UpdateHurdlesLeftUI()
+    {
+       
+        int hurdlesLeft = Mathf.Max(maxHurdles - hurdlesDestroyed, 0);
+        if (levelNike != null)
+            levelNike.UpdateHurdlesLeftText(hurdlesLeft);
     }
 
     private IEnumerator IncreaseDifficulty()
     {
         while (spawningHurdles)
         {
-            yield return new WaitForSeconds(difficultyIncreaseRate); 
-            
+            yield return new WaitForSeconds(difficultyIncreaseRate);
             currentSpawnInterval = Mathf.Max(currentSpawnInterval - spawnIntervalDecreaseAmount, minimumSpawnInterval);
+            Debug.Log($"Difficulty increased: new spawn interval = {currentSpawnInterval:F2}s");
         }
     }
 
     public void StopSpawningHurdles()
     {
         spawningHurdles = false;
-        StopCoroutine(IncreaseDifficulty());
+        if (difficultyCoroutine != null)
+        {
+            StopCoroutine(difficultyCoroutine);
+        }
+        Debug.Log("Stopped spawning hurdles after spawning " + hurdlesSpawned + " hurdles");
     }
+
+    public int MaxHurdles
+    {
+        get { return maxHurdles; }
+    }
+}*/
+
+using UnityEngine;
+using System.Collections;
+
+public class HurdleSpawner : MonoBehaviour
+{
+    [Header("Hurdle Prefab")]
+    [SerializeField] private GameObject hurdlePrefab;
+
+    [Header("Spawn Settings")]
+    [SerializeField] private float initialSpawnInterval = 2f;
+    [SerializeField] private float minimumSpawnInterval = 1f;
+    [SerializeField] private float spawnYPosition = 0f;
+
+    [Header("Difficulty Settings")]
+    [SerializeField] private float difficultyIncreaseRate = 2f;
+    [SerializeField] private float spawnIntervalDecreaseAmount = 0.05f;
+
+    [Header("Hurdle Limit")]
+    [SerializeField] private int maxHurdles = 25;
+
+    private float nextSpawnTime;
+    private float currentSpawnInterval;
+    private bool spawningHurdles = false;
+    private int hurdlesSpawned = 0;
+    private int hurdlesDestroyed = 0;
+
+    private Coroutine difficultyCoroutine;
+    private LevelNike levelNike;
+
+    private void Start()
+    {
+        currentSpawnInterval = initialSpawnInterval;
+        levelNike = FindObjectOfType<LevelNike>();
+        if (levelNike == null)
+        {
+            Debug.LogWarning("No LevelNike found in the scene. 'Hurdles Left' UI will not update.");
+        }
+    }
+
+    private void Update()
+    {
+        if (spawningHurdles && Time.time >= nextSpawnTime)
+        {
+            if (hurdlesSpawned < maxHurdles)
+            {
+                SpawnHurdle();
+                nextSpawnTime = Time.time + currentSpawnInterval;
+            }
+            else
+            {
+                StopSpawningHurdles();
+            }
+        }
+    }
+
+    public void StartSpawningHurdles()
+    {
+        if (!spawningHurdles)
+        {
+            spawningHurdles = true;
+            difficultyCoroutine = StartCoroutine(IncreaseDifficulty());
+            UpdateHurdlesLeftUI();
+            nextSpawnTime = Time.time + currentSpawnInterval;
+        }
+    }
+
+    private void SpawnHurdle()
+    {
+        GameObject hurdle = Instantiate(hurdlePrefab, new Vector3(10f, spawnYPosition, 0), Quaternion.identity);
+        Rigidbody2D rb = hurdle.GetComponent<Rigidbody2D>();
+        if (rb == null)
+        {
+            rb = hurdle.AddComponent<Rigidbody2D>();
+        }
+        rb.gravityScale = 0;
+        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+
+        hurdlesSpawned++;
+        UpdateHurdlesLeftUI();
+    }
+
+    public void HurdleDestroyed()
+    {
+        hurdlesDestroyed++;
+        UpdateHurdlesLeftUI();
+    }
+
+    private void UpdateHurdlesLeftUI()
+    {
+        int hurdlesLeft = Mathf.Max(maxHurdles - hurdlesDestroyed, 0);
+        if (levelNike != null)
+            levelNike.UpdateHurdlesLeftText(hurdlesLeft);
+    }
+
+    private IEnumerator IncreaseDifficulty()
+    {
+        while (spawningHurdles)
+        {
+            yield return new WaitForSeconds(difficultyIncreaseRate);
+            currentSpawnInterval = Mathf.Max(currentSpawnInterval - spawnIntervalDecreaseAmount, minimumSpawnInterval);
+            Debug.Log($"Difficulty increased: new spawn interval = {currentSpawnInterval:F2}s");
+        }
+    }
+
+    public void StopSpawningHurdles()
+    {
+        spawningHurdles = false;
+        if (difficultyCoroutine != null)
+        {
+            StopCoroutine(difficultyCoroutine);
+        }
+        Debug.Log("Stopped spawning hurdles after spawning " + hurdlesSpawned + " hurdles");
+    }
+
+    public int HurdlesDestroyed => hurdlesDestroyed;
+
+    public int MaxHurdles => maxHurdles;
 }

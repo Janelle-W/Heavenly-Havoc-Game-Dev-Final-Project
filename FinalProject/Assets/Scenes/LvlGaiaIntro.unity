@@ -214,55 +214,6 @@ MonoBehaviour:
   slideDuration: 2
   startPosition: {x: -1500, y: 0}
   endPosition: {x: 0, y: 0}
---- !u!1 &1347118652
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1347118654}
-  - component: {fileID: 1347118653}
-  m_Layer: 0
-  m_Name: AudioMngmt
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1347118653
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1347118652}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07cb9ba774fb0499e9d3dcd0dbb8c4db, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  musicSource: {fileID: 0}
-  sfxSource: {fileID: 0}
-  backgroundMusic: {fileID: 8300000, guid: f287f8c788a2546c1a09168401682563, type: 3}
-  pointCollectSound: {fileID: 0}
-  audioMixer: {fileID: 0}
---- !u!4 &1347118654
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1347118652}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 888.0708, y: 604.93384, z: 3.1786835}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1690803093
 GameObject:
   m_ObjectHideFlags: 0
@@ -604,8 +555,8 @@ MonoBehaviour:
   - {fileID: 47362590}
   - {fileID: 47362590}
   levelScenes:
-  - LevelNike
   - LevelGaia
+  - LevelNike
   pauseDuration: 2
 --- !u!4 &2032884581
 Transform:
@@ -627,7 +578,6 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1710872477}
-  - {fileID: 1347118654}
   - {fileID: 2032884581}
   - {fileID: 1857969163}
   - {fileID: 1690803096}
