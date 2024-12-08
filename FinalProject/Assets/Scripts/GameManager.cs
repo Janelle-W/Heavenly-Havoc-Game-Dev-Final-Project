@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -14,41 +15,6 @@ public class GameManager : MonoBehaviour
     {
         StartCoroutine(StartLevelSequence());
     }
-
-    /*private IEnumerator StartLevelSequence()
-    {
-        if (currentLevel < introImages.Length && currentLevel < levelScenes.Length)
-        {
-           
-            imageSlider.imageRect = introImages[currentLevel];
-
-            if (imageSlider.imageRect == null)
-            {
-                Debug.LogError($"Intro image for level {currentLevel} is not assigned!");
-                yield break; 
-            }
-
-            yield return StartCoroutine(imageSlider.SlideIn());
-
-            yield return new WaitForSeconds(pauseDuration);
-
-            yield return StartCoroutine(imageSlider.SlideOut());
-
-            if (!string.IsNullOrEmpty(levelScenes[currentLevel]))
-            {
-                SceneManager.LoadScene(levelScenes[currentLevel]);
-            }
-            else
-            {
-                Debug.LogError($"Scene name for level {currentLevel} is not assigned!");
-            }
-        }
-        else
-        {
-            Debug.LogError("Current level exceeds the number of assigned intro images or level scenes!");
-        }
-    }*/
-
     private IEnumerator StartLevelSequence()
 {
     if (currentLevel < introImages.Length && currentLevel < levelScenes.Length)
@@ -71,7 +37,6 @@ public class GameManager : MonoBehaviour
         {
             string nextScene = levelScenes[currentLevel];
 
-            // Debug before loading
             Debug.Log($"Loading scene: {nextScene}");
 
             SceneManager.LoadScene(nextScene);
@@ -92,5 +57,10 @@ public class GameManager : MonoBehaviour
     {
         currentLevel++;
         StartCoroutine(StartLevelSequence());  
+    }
+
+    internal void GameOver()
+    {
+        throw new NotImplementedException();
     }
 }

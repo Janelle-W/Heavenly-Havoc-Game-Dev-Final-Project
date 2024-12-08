@@ -18,7 +18,6 @@ public class PostProcessingController : MonoBehaviour
 
     private void Start()
     {
-        // Get the Color Adjustments settings
         if (postProcessVolume.profile.TryGet(out colorAdjustments))
         {
             Debug.Log("Color Adjustments loaded successfully.");
@@ -28,14 +27,12 @@ public class PostProcessingController : MonoBehaviour
             Debug.LogError("Color Adjustments not found in the Post-Processing Profile. Ensure the effect is added.");
         }
 
-        // Initialize slider values
         if (colorAdjustments != null)
         {
             brightnessSlider.value = colorAdjustments.postExposure.value;
             contrastSlider.value = colorAdjustments.contrast.value;
             colorationSlider.value = colorAdjustments.saturation.value;
 
-            // Add listeners to sliders
             brightnessSlider.onValueChanged.AddListener(SetBrightness);
             contrastSlider.onValueChanged.AddListener(SetContrast);
             colorationSlider.onValueChanged.AddListener(SetColoration);

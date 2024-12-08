@@ -1,5 +1,5 @@
-/*using UnityEngine;
-using TMPro; 
+using UnityEngine;
+using TMPro;
 using System.Collections;
 using UnityEngine.SceneManagement;
 
@@ -7,9 +7,7 @@ public class LevelNike : MonoBehaviour
 {
     [Header("Countdown UI")]
     public TMP_Text raceBeginsText;
-    public TMP_Text countdownText;    
-    public float countdownTime = 3.0f; 
-
+    public TMP_Text countdownText;
     public TMP_Text stopwatchText;
     public TMP_Text hurdlesLeftText;
 
@@ -24,84 +22,103 @@ public class LevelNike : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private HurdleSpawner hurdleSpawner;
-    [SerializeField] private float countdownDuration = 3f;
 
     public Animator NikeAnimatorCont;
-    public float playerSpeed = 5f;
 
     private bool isGameStarted = false;
-    private bool hasLoggedGameStarted = false;
     private float stopwatchTime = 0f;
     private Vector3 originalPosition;
 
     private void Start()
     {
+        Debug.Log("LevelNike script started.");
+
+        // Assign references if not set in the Inspector
+        if (stopwatchText == null)
+        {
+            stopwatchText = GameObject.Find("StopwatchText")?.GetComponent<TMP_Text>();
+            if (stopwatchText != null)
+            {
+                Debug.Log("StopwatchText assigned at runtime.");
+            }
+            else
+            {
+                Debug.LogError("StopwatchText is not assigned! Check object name.");
+            }
+        }
+
         if (nikeMusic != null)
         {
             AudioManager.instance.PlaySceneMusic(nikeMusic);
+            Debug.Log("Playing Nike music.");
         }
 
-        if (raceBeginsText == null || countdownText == null)
+        if (raceBeginsText == null || countdownText == null || player == null || hurdlesLeftText == null)
         {
-            Debug.LogError("Race Begins or Countdown Text not assigned in Inspector!");
-            return; 
-        }
-
-        if (player == null)
-        {
-            Debug.LogError("Player not assigned in Inspector!");
+            Debug.LogError("Critical references are missing! Check Inspector assignments.");
             return;
         }
 
         NikeAnimatorCont = player.GetComponent<Animator>();
+        if (NikeAnimatorCont == null)
+        {
+            Debug.LogError("Animator component missing from player.");
+        }
         player.SetActive(true);
 
         originalPosition = player.transform.position;
         raceBeginsText.text = "RACE BEGINS IN";
+
+
         StartCoroutine(StartCountdownAndGame());
     }
 
     private IEnumerator StartCountdownAndGame()
     {
-        for (int i = (int)countdownTime; i > 0; i--)
+        for (int i = 3; i > 0; i--)
         {
             countdownText.text = i.ToString();
+            Debug.Log($"Countdown: {i}");
             yield return new WaitForSeconds(1f);
         }
 
         countdownText.text = "Go!";
+        Debug.Log("Race started!");
         yield return new WaitForSeconds(1f);
 
         raceBeginsText.text = "";
         countdownText.text = "";
 
-        NikeAnimatorCont.SetBool("isRunning", true);
-        hurdleSpawner.StartSpawningHurdles();
+        if (NikeAnimatorCont != null)
+        {
+            NikeAnimatorCont.SetBool("isRunning", true);
+            Debug.Log("Player is running.");
+        }
+
+        if (hurdleSpawner != null)
+        {
+            hurdleSpawner.StartSpawningHurdles();
+        }
+        else
+        {
+            Debug.LogError("HurdleSpawner reference is missing!");
+        }
+
         isGameStarted = true;
-        stopwatchText.text = "Time: 0.0s";
-        UpdateHurdlesLeftText(25);
+        UpdateHurdlesLeftText(hurdleSpawner.MaxHurdles); 
+        UpdateStopwatchText(); 
     }
 
     private void Update()
     {
         if (isGameStarted)
         {
-            if (!hasLoggedGameStarted)
-            {
-                hasLoggedGameStarted = true;
-            }
-
             stopwatchTime += Time.deltaTime;
-            if (stopwatchText != null)
-                stopwatchText.text = $"Time: {stopwatchTime:F1}s";
-
-            if (stopwatchTime > 65f)
-            {
-                EndGame(false); // Time exceeded, lose
-            }
+            UpdateStopwatchText();
 
             if (Input.GetKeyDown(KeyCode.Space))
             {
+                Debug.Log("Space key pressed.");
                 Jump();
             }
         }
@@ -112,6 +129,11 @@ public class LevelNike : MonoBehaviour
         if (jumpSound != null)
         {
             AudioManager.instance.PlaySFX(jumpSound);
+            Debug.Log("Jump sound played.");
+        }
+        else
+        {
+            Debug.LogWarning("Jump sound not assigned.");
         }
         StartCoroutine(JumpCoroutine());
     }
@@ -125,6 +147,7 @@ public class LevelNike : MonoBehaviour
         Vector3 startPosition = player.transform.position;
         Vector3 targetPosition = startPosition + new Vector3(0, jumpHeight, 0);
 
+        // Jump Up
         while (elapsedTime < jumpDuration / 2)
         {
             float t = elapsedTime / (jumpDuration / 2);
@@ -134,6 +157,8 @@ public class LevelNike : MonoBehaviour
         }
 
         elapsedTime = 0f;
+
+        // Jump Down
         while (elapsedTime < jumpDuration / 2)
         {
             float t = elapsedTime / (jumpDuration / 2);
@@ -143,166 +168,35 @@ public class LevelNike : MonoBehaviour
         }
 
         player.transform.position = originalPosition;
-    }
-
-    public void UpdateHurdlesLeftText(int hurdlesLeft)
-    {
-        if (hurdlesLeftText != null)
-        {
-            hurdlesLeftText.text = $"Hurdles Left: {hurdlesLeft}";
-        }
-
-        if (hurdlesLeft <= 0 && isGameStarted)
-        {
-            EndGame(true); // Win
-        }
-    }
-
-    private void EndGame(bool hasWon)
-    {
-        if (!isGameStarted)
-            return;
-
-        isGameStarted = false;
-        NikeAnimatorCont.SetBool("isRunning", false);
-
-        if (hasWon && stopwatchTime <= 65f)
-        {
-            AudioManager.instance.PlayWinSFX();
-            SceneManager.LoadScene("WinScene");
-        }
-        else
-        {
-            AudioManager.instance.PlayLoseSFX();
-            SceneManager.LoadScene("LoserScene");
-        }
+        Debug.Log("Player landed.");
     }
 
     public void AddTime(float additionalTime)
 {
     stopwatchTime += additionalTime;
     Debug.Log($"Added {additionalTime} seconds. New time: {stopwatchTime:F1}s");
+
     if (stopwatchText != null)
     {
         stopwatchText.text = $"Time: {stopwatchTime:F1}s";
+        Debug.Log("Stopwatch UI updated.");
+    }
+    else
+    {
+        Debug.LogError("StopwatchText is not assigned in the UI.");
     }
 }
 
 
-}*/
-
-using UnityEngine;
-using TMPro;
-using System.Collections;
-using UnityEngine.SceneManagement;
-
-public class LevelNike : MonoBehaviour
-{
-    [Header("Countdown UI")]
-    public TMP_Text raceBeginsText;  // Assign in Inspector
-    public TMP_Text countdownText;  // Assign in Inspector
-    public TMP_Text stopwatchText;  // Assign in Inspector
-    public TMP_Text hurdlesLeftText; // Text to display remaining hurdles
-
-    [Header("Player and Game Settings")]
-    public GameObject player;       // Assign in Inspector
-
-    [Header("Level Music")]
-    public AudioClip nikeMusic;
-
-    [Header("Jump Sound")]
-    public AudioClip jumpSound;
-
-    [Header("References")]
-    [SerializeField] private HurdleSpawner hurdleSpawner;  // Assign in Inspector
-
-    public Animator NikeAnimatorCont;
-
-    private bool isGameStarted = false;
-    private float stopwatchTime = 0f;
-
-    private void Start()
-    {
-        Debug.Log("LevelNike script started.");
-
-        if (stopwatchText == null)
-        {
-            // Try finding stopwatchText if not assigned
-            stopwatchText = GameObject.Find("StopwatchText")?.GetComponent<TMP_Text>();
-            if (stopwatchText != null)
-            {
-                Debug.Log("StopwatchText found and assigned at runtime.");
-            }
-            else
-            {
-                Debug.LogError("StopwatchText is not assigned! Check Inspector or object name.");
-            }
-        }
-
-        if (nikeMusic != null)
-        {
-            AudioManager.instance.PlaySceneMusic(nikeMusic);
-        }
-
-        if (raceBeginsText == null || countdownText == null || player == null || hurdlesLeftText == null)
-        {
-            Debug.LogError("Critical references are missing! Check Inspector assignments.");
-            return;
-        }
-
-        NikeAnimatorCont = player.GetComponent<Animator>();
-        player.SetActive(true);
-
-        raceBeginsText.text = "RACE BEGINS IN";
-        StartCoroutine(StartCountdownAndGame());
-    }
-
-    private IEnumerator StartCountdownAndGame()
-    {
-        for (int i = 3; i > 0; i--)
-        {
-            countdownText.text = i.ToString();
-            yield return new WaitForSeconds(1f);
-        }
-
-        countdownText.text = "Go!";
-        yield return new WaitForSeconds(1f);
-
-        raceBeginsText.text = "";
-        countdownText.text = "";
-
-        NikeAnimatorCont.SetBool("isRunning", true);
-        hurdleSpawner.StartSpawningHurdles();
-        isGameStarted = true;
-        stopwatchText.text = "Time: 0.0s";
-        UpdateHurdlesLeftText(hurdleSpawner.MaxHurdles);  // Initialize hurdles left text
-    }
-
-    private void Update()
-    {
-        if (isGameStarted)
-        {
-            stopwatchTime += Time.deltaTime;
-            UpdateStopwatchText();
-        }
-    }
-
-    public void AddTime(float additionalTime)
-    {
-        stopwatchTime += additionalTime;
-        Debug.Log($"Added {additionalTime} seconds. New time: {stopwatchTime:F1}s");
-        UpdateStopwatchText();
-    }
-
     private void UpdateStopwatchText()
     {
-        if (stopwatchText == null)
+        if (stopwatchText != null)
         {
-            Debug.LogError("stopwatchText is not assigned!");
+            stopwatchText.text = $"Time: {stopwatchTime:F1}s";
         }
         else
         {
-            stopwatchText.text = $"Time: {stopwatchTime:F1}s";
+            Debug.LogError("stopwatchText is not assigned!");
         }
     }
 
@@ -311,30 +205,38 @@ public class LevelNike : MonoBehaviour
         if (hurdlesLeftText != null)
         {
             hurdlesLeftText.text = $"Hurdles Left: {hurdlesLeft}";
-        }
-
-        if (hurdlesLeft <= 0 && isGameStarted)
-        {
-            NikeAnimatorCont.SetBool("isRunning", false); // Set animation to idle
-            EndGame(true); // Win condition
-        }
-    }
-
-    private void EndGame(bool hasWon)
-    {
-        if (!isGameStarted)
-            return;
-
-        isGameStarted = false;
-        NikeAnimatorCont.SetBool("isRunning", false);
-
-        if (hasWon)
-        {
-            SceneManager.LoadScene("WinScene");
+            Debug.Log($"Hurdles Left Updated: {hurdlesLeft}");
         }
         else
         {
-            SceneManager.LoadScene("LoserScene");
+            Debug.LogError("hurdlesLeftText is not assigned!");
         }
+
+        CheckHurdlesLeft(hurdlesLeft); 
     }
+
+    public void CheckHurdlesLeft(int hurdlesLeft)
+{
+    if (hurdlesLeft <= 0 && isGameStarted)
+    {
+        Debug.Log("All hurdles cleared! Transitioning to NikeWin scene.");
+        isGameStarted = false; 
+
+        if (NikeAnimatorCont != null)
+        {
+            NikeAnimatorCont.SetBool("isRunning", false);
+        }
+
+        StartCoroutine(TransitionToWinScene());
+    }
+}
+
+
+
+    private IEnumerator TransitionToWinScene()
+{
+    yield return new WaitForSeconds(1f); 
+    SceneManager.LoadScene("NikeWin");
+}
+
 }

@@ -143,3 +143,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a02845f17a7b410db712fcbab8a7ac3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hasPearl: 1
+  pearlPoints: 10
+  penaltyPoints: 5
+  pearlSound: {fileID: 0}
+  emptyClamSound: {fileID: 0}

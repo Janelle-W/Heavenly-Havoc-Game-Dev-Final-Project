@@ -264,23 +264,20 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 16015791}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a588f013a30b74abc9dc47d7e0c7d677, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   raceBeginsText: {fileID: 0}
   countdownText: {fileID: 0}
-  countdownTime: 3
   stopwatchText: {fileID: 0}
   hurdlesLeftText: {fileID: 16015794}
   player: {fileID: 0}
   nikeMusic: {fileID: 0}
   jumpSound: {fileID: 0}
   hurdleSpawner: {fileID: 0}
-  countdownDuration: 3
   NikeAnimatorCont: {fileID: 0}
-  playerSpeed: 5
 --- !u!1 &117402522
 GameObject:
   m_ObjectHideFlags: 0
@@ -294,7 +291,7 @@ GameObject:
   - component: {fileID: 117402524}
   - component: {fileID: 117402526}
   m_Layer: 5
-  m_Name: stopwatchText
+  m_Name: StopwatchText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -423,23 +420,20 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 117402522}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a588f013a30b74abc9dc47d7e0c7d677, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   raceBeginsText: {fileID: 0}
   countdownText: {fileID: 0}
-  countdownTime: 3
   stopwatchText: {fileID: 117402524}
   hurdlesLeftText: {fileID: 0}
   player: {fileID: 0}
   nikeMusic: {fileID: 0}
   jumpSound: {fileID: 0}
   hurdleSpawner: {fileID: 0}
-  countdownDuration: 3
   NikeAnimatorCont: {fileID: 0}
-  playerSpeed: 5
 --- !u!1 &129528183
 GameObject:
   m_ObjectHideFlags: 0
@@ -713,7 +707,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 623534890}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 07cb9ba774fb0499e9d3dcd0dbb8c4db, type: 3}
   m_Name: 
@@ -765,7 +759,7 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 637661211}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: ca907be010cd74288a9f9da3bcae8f37, type: 3}
@@ -1034,16 +1028,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   raceBeginsText: {fileID: 662185477}
   countdownText: {fileID: 1390352302}
-  countdownTime: 3
   stopwatchText: {fileID: 117402524}
   hurdlesLeftText: {fileID: 16015794}
   player: {fileID: 1002905391}
   nikeMusic: {fileID: 8300000, guid: ca907be010cd74288a9f9da3bcae8f37, type: 3}
   jumpSound: {fileID: 8300000, guid: 0b6e38be396ef40eab9641580d4512cd, type: 3}
   hurdleSpawner: {fileID: 837204041}
-  countdownDuration: 3
   NikeAnimatorCont: {fileID: 1002905394}
-  playerSpeed: 10
 --- !u!4 &731192377
 Transform:
   m_ObjectHideFlags: 0
@@ -1083,7 +1074,7 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 759527310}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 0b6e38be396ef40eab9641580d4512cd, type: 3}
@@ -1222,7 +1213,7 @@ MonoBehaviour:
   spawnYPosition: -2.6916
   difficultyIncreaseRate: 8
   spawnIntervalDecreaseAmount: 0.1
-  maxHurdles: 25
+  maxHurdles: 5
 --- !u!4 &837204043
 Transform:
   m_ObjectHideFlags: 0
@@ -1355,7 +1346,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1002905391}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0

@@ -8,23 +8,21 @@ public class ResolutionManager : MonoBehaviour
     [SerializeField] private TMP_Dropdown resolutionDropdown;
 
     [Header("Fullscreen Toggle")]
-    [SerializeField] private Toggle fullscreenToggle; // Optional
+    [SerializeField] private Toggle fullscreenToggle; 
 
     [Header("VSync Toggle")]
-    [SerializeField] private Toggle vsyncToggle; // Optional
+    [SerializeField] private Toggle vsyncToggle;
 
     private Resolution[] resolutions;
 
     private void Start()
     {
-        // Ensure resolution dropdown is assigned
         if (resolutionDropdown == null)
         {
             Debug.LogError("ResolutionDropdown (TMP_Dropdown) is not assigned in the Inspector!");
             return;
         }
 
-        // Get system resolutions
         resolutions = Screen.resolutions;
 
         if (resolutions.Length == 0)
@@ -33,7 +31,6 @@ public class ResolutionManager : MonoBehaviour
             return;
         }
 
-        // Clear and populate TMP_Dropdown options
         resolutionDropdown.ClearOptions();
         var options = new System.Collections.Generic.List<string>();
 
@@ -43,7 +40,6 @@ public class ResolutionManager : MonoBehaviour
             string resolutionOption = $"{resolutions[i].width} x {resolutions[i].height}";
             options.Add(resolutionOption);
 
-            // Check if this is the current resolution
             if (resolutions[i].width == Screen.currentResolution.width &&
                 resolutions[i].height == Screen.currentResolution.height)
             {
@@ -55,17 +51,14 @@ public class ResolutionManager : MonoBehaviour
         resolutionDropdown.value = currentResolutionIndex;
         resolutionDropdown.RefreshShownValue();
 
-        // Listen for TMP_Dropdown changes
         resolutionDropdown.onValueChanged.AddListener(SetResolution);
 
-        // Handle fullscreen toggle (optional)
         if (fullscreenToggle != null)
         {
             fullscreenToggle.isOn = Screen.fullScreen;
             fullscreenToggle.onValueChanged.AddListener(SetFullscreen);
         }
 
-        // Handle VSync toggle (optional)
         if (vsyncToggle != null)
         {
             vsyncToggle.isOn = QualitySettings.vSyncCount > 0;
