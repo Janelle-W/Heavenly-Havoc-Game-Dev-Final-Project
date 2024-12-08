@@ -1213,7 +1213,7 @@ MonoBehaviour:
   spawnYPosition: -2.6916
   difficultyIncreaseRate: 8
   spawnIntervalDecreaseAmount: 0.1
-  maxHurdles: 5
+  maxHurdles: 25
 --- !u!4 &837204043
 Transform:
   m_ObjectHideFlags: 0
