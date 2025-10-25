@@ -13,20 +13,6 @@ The game features full scene transitions, sound design, menu navigation, and a c
 
 ---
 
-## Table of Contents
-- Overview  
-- Core Features  
-- Gameplay and Controls  
-- Technical Details  
-- Running the Project in Unity  
-- Project Structure  
-- Troubleshooting  
-- Credits  
-- License  
-- Contact  
-
----
-
 ## Overview
 **Heavenly Havoc** demonstrates full gameplay systems, integrated audio, and scene management across three distinct levels.  
 Developed in **Unity** using **C#**, **ShaderLab**, and **HLSL**, the game showcases character progression, UI interaction, and polished environmental design within a mythological framework.
