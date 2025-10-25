@@ -1,6 +1,6 @@
 # Heavenly Havoc
 
-This repository contains the source for **Heavenly Havoc**, a fully developed action-adventure game created as a final project for a Game Development course.
+This repository contains **Heavenly Havoc**, a fully developed action-adventure game created as a final project for a Game Development course.
 
 ---
 
